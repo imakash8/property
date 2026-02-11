@@ -47,6 +47,66 @@
             top: 20px;
         }
 
+        .filters-toggle {
+            display: none;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .filters-toggle:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .filters-content {
+            display: block;
+            width: 100%;
+        }
+
+        .filters-sidebar h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filters-title {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .filters-title {
+                display: none;
+            }
+            .filters-toggle {
+                display: flex;
+            }
+
+            .filters-content {
+                display: none;
+                margin-top: 16px;
+            }
+
+            .filters-content.active {
+                display: block;
+            }
+        }
+
         .filter-section {
             margin-bottom: 20px;
             padding-bottom: 20px;
@@ -661,17 +721,56 @@
                 font-size: 22px;
             }
             
-            .footer-links {
-                flex-direction: column;
-                gap: 10px;
-            }
-
             .main-content {
                 grid-template-columns: 1fr;
             }
 
             .filters-sidebar {
                 position: static;
+                padding: 0;
+                background: transparent;
+                box-shadow: none;
+            }
+
+            .filters-sidebar h3 {
+                display: none;
+            }
+            
+            .filters-toggle {
+                display: flex;
+                background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+                color: white;
+                border: none;
+                padding: 12px 16px;
+                border-radius: 8px;
+                font-weight: 700;
+                cursor: pointer;
+                font-size: 14px;
+                width: 100%;
+                margin-bottom: 16px;
+                box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+                transition: all 0.3s;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+
+            .filters-toggle:hover {
+                background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+                box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+            }
+
+            .filters-content {
+                display: none;
+                background: white;
+                border-radius: 12px;
+                padding: 20px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                margin-bottom: 20px;
+            }
+
+            .filters-content.active {
+                display: block;
             }
             
             .property-grid {
@@ -694,6 +793,11 @@
 
             .price-inputs {
                 grid-template-columns: 1fr;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 10px;
             }
         }
     </style>
@@ -729,6 +833,12 @@
                     🔍 Search Filters
                 </h3>
 
+                <button class="filters-toggle" onclick="toggleFilters()">
+                    <span>🔍 Search Filters</span>
+                    <span id="filterToggleIcon">▼</span>
+                </button>
+                
+                <div class="filters-content" id="filtersContent">
                 <!-- Location Filter -->
                 <div class="filter-section">
                     <div class="filter-title">📍 Location</div>
@@ -823,6 +933,7 @@
                 <!-- Action Buttons -->
                 <button class="btn-apply" onclick="applyFilters()">Apply Filters</button>
                 <button class="btn-reset" onclick="resetFilters()">Reset All</button>
+                </div>
             </aside>
 
             <!-- Main Content Area -->
@@ -1088,6 +1199,13 @@
             if (condition === 'Excellent' || condition === 'Good Condition') return 'badge-green';
             if (condition === 'Needs Modernisation') return 'badge-yellow';
             return 'badge-yellow';
+        }
+
+        function toggleFilters() {
+            const filtersContent = document.getElementById('filtersContent');
+            const filterToggleIcon = document.getElementById('filterToggleIcon');
+            filtersContent.classList.toggle('active');
+            filterToggleIcon.textContent = filtersContent.classList.contains('active') ? '▲' : '▼';
         }
 
         function sortProperties() {
