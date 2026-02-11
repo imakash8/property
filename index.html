@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auberry - AI-Powered Property Investment Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: #1e293b;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        main {
+            flex: 1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .filters-sidebar {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 20px;
+        }
+
+        .filter-section {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .filter-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .filter-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .range-display {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .price-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-chip {
+            padding: 6px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .filter-chip:hover {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+
+        .filter-chip.active {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border-color: #3b82f6;
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e2e8f0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.4);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-apply {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 14px;
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s;
+        }
+
+        .btn-apply:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-reset {
+            width: 100%;
+            padding: 8px;
+            background: transparent;
+            color: #64748b;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        .btn-reset:hover {
+            background: #f8fafc;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.15);
+            padding: 25px 0;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3b82f6;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #dbeafe;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .stat {
+            text-align: right;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #bfdbfe;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: #60a5fa;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            box-shadow: 0 6px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .sort-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        select {
+            padding: 8px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .property-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .property-card:hover {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+        .property-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #64748b;
+        }
+
+        .property-content {
+            padding: 20px;
+        }
+
+        .property-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #0f172a;
+        }
+
+        .property-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .property-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .metric-row:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .metric-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .metric-value.highlight {
+            color: #10b981;
+            font-size: 18px;
+        }
+
+        .metric-value.primary {
+            color: #3b82f6;
+        }
+
+        .badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 16px 0;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-green {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-yellow {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-purple {
+            background: #e9d5ff;
+            color: #6b21a8;
+        }
+
+        .badge-blue {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .property-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .btn-view {
+            flex: 1;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .btn-view:hover {
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-star {
+            width: 40px;
+            height: 40px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .btn-star.active {
+            background: #fef3c7;
+            color: #f59e0b;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: #f1f5f9;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .modal-close:hover {
+            background: #e2e8f0;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .valuation-box {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border-left: 4px solid #3b82f6;
+            position: relative;
+        }
+        
+        .valuation-box::before {
+            content: '✨ Auberry Valuation';
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #1e40af;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .valuation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 16px;
+        }
+
+        .valuation-item {
+            text-align: center;
+        }
+
+        .valuation-label {
+            font-size: 12px;
+            color: #475569;
+            margin-bottom: 4px;
+        }
+
+        .valuation-amount {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .section {
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .investment-summary {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        footer {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            color: white;
+            padding: 40px 20px;
+            margin-top: 50px;
+            border-top: 3px solid #3b82f6;
+        }
+        
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .footer-brand {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: #60a5fa;
+            letter-spacing: -0.5px;
+        }
+        
+        .footer-tagline {
+            font-size: 14px;
+            color: #bfdbfe;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links a {
+            color: #dbeafe;
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+        
+        .footer-links a:hover {
+            color: #60a5fa;
+        }
+        
+        .footer-copy {
+            font-size: 12px;
+            color: #93c5fd;
+            border-top: 1px solid rgba(59, 130, 246, 0.3);
+            padding-top: 15px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 22px;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-sidebar {
+                position: static;
+            }
+            
+            .property-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .valuation-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .price-inputs {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">🫐</div>
+                <div>
+                    <h1>Auberry</h1>
+                    <div class="subtitle">AI-Powered Property Investment Platform for Prime Central London</div>
+                </div>
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-label">Shortlist</div>
+                    <div class="stat-value" id="shortlistCount">0</div>
+                </div>
+                <button class="btn btn-primary">📥 Export</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+    <div class="container">
+        <div class="main-content">
+            <!-- Filters Sidebar -->
+            <aside class="filters-sidebar">
+                <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
+                    🔍 Search Filters
+                </h3>
+
+                <!-- Location Filter -->
+                <div class="filter-section">
+                    <div class="filter-title">📍 Location</div>
+                    <input 
+                        type="text" 
+                        id="locationFilter" 
+                        class="filter-input" 
+                        placeholder="Westminster, Chelsea..."
+                        onchange="applyFilters()"
+                    />
+                </div>
+
+                <!-- Price Range Filter -->
+                <div class="filter-section">
+                    <div class="filter-title">💰 Price Range</div>
+                    <div class="range-display" id="priceRangeDisplay">£500k - £2M</div>
+                    <div class="price-inputs">
+                        <input 
+                            type="number" 
+                            id="minPrice" 
+                            class="filter-input" 
+                            placeholder="Min"
+                            value="500000"
+                            step="50000"
+                            onchange="updatePriceDisplay(); applyFilters()"
+                        />
+                        <input 
+                            type="number" 
+                            id="maxPrice" 
+                            class="filter-input" 
+                            placeholder="Max"
+                            value="2000000"
+                            step="50000"
+                            onchange="updatePriceDisplay(); applyFilters()"
+                        />
+                    </div>
+                </div>
+
+                <!-- Bedrooms Filter -->
+                <div class="filter-section">
+                    <div class="filter-title">🛏️ Bedrooms</div>
+                    <div class="filter-group">
+                        <button class="filter-chip active" data-bedrooms="any" onclick="selectBedrooms('any')">Any</button>
+                        <button class="filter-chip" data-bedrooms="1" onclick="selectBedrooms('1')">1+</button>
+                        <button class="filter-chip" data-bedrooms="2" onclick="selectBedrooms('2')">2+</button>
+                        <button class="filter-chip" data-bedrooms="3" onclick="selectBedrooms('3')">3+</button>
+                    </div>
+                </div>
+
+                <!-- Property Type Filter -->
+                <div class="filter-section">
+                    <div class="filter-title">🏠 Property Type</div>
+                    <select id="propertyType" class="filter-input" onchange="applyFilters()">
+                        <option value="any">Any Type</option>
+                        <option value="Flat">Flat</option>
+                        <option value="House">House</option>
+                        <option value="Terrace">Terrace</option>
+                        <option value="Detached">Detached</option>
+                    </select>
+                </div>
+
+                <!-- Undervaluation Filter -->
+                <div class="filter-section">
+                    <div class="filter-title">📈 Min Undervaluation</div>
+                    <div class="range-display" id="undervalDisplay">0%</div>
+                    <input 
+                        type="range" 
+                        id="undervalSlider" 
+                        class="slider" 
+                        min="0" 
+                        max="20" 
+                        value="0" 
+                        step="1"
+                        oninput="updateUndervalDisplay()"
+                        onchange="applyFilters()"
+                    />
+                </div>
+
+                <!-- Condition Filter -->
+                <div class="filter-section">
+                    <div class="filter-title">⭐ Condition</div>
+                    <select id="conditionFilter" class="filter-input" onchange="applyFilters()">
+                        <option value="any">Any Condition</option>
+                        <option value="Excellent">Excellent</option>
+                        <option value="Good Condition">Good Condition</option>
+                        <option value="Needs Modernisation">Needs Modernisation</option>
+                        <option value="Needs Work">Needs Work</option>
+                        <option value="Renovation Required">Renovation Required</option>
+                    </select>
+                </div>
+
+                <!-- Action Buttons -->
+                <button class="btn-apply" onclick="applyFilters()">Apply Filters</button>
+                <button class="btn-reset" onclick="resetFilters()">Reset All</button>
+            </aside>
+
+            <!-- Main Content Area -->
+            <div>
+                <!-- Controls -->
+                <div class="controls">
+            <div>
+                <h2 style="font-size: 20px; font-weight: 700;"><span id="propertyCount">5</span> Properties Found</h2>
+                <div style="font-size: 14px; color: #64748b;">Sorted by <span id="sortLabel">Highest Undervaluation</span></div>
+            </div>
+            <div class="sort-control">
+                <label for="sortSelect">Sort by:</label>
+                <select id="sortSelect" onchange="sortProperties()">
+                    <option value="undervaluation">Undervaluation %</option>
+                    <option value="roi">ROI %</option>
+                    <option value="investment">Investment Score</option>
+                    <option value="price">Price (Low to High)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Property Grid -->
+        <div class="property-grid" id="propertyGrid"></div>
+            </div>
+        </div>
+    </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">🫐 Auberry</div>
+            <div class="footer-tagline">Intelligent Property Investment Analysis Powered by AI</div>
+            <div class="footer-links">
+                <a href="#">About Auberry</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Us</a>
+            </div>
+            <div class="footer-copy">
+                © 2026 Auberry. All rights reserved. | Making property investment smarter with AI.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div class="modal" id="propertyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div style="flex: 1; padding-right: 20px;">
+                    <h2 id="modalTitle" style="font-size: 24px; font-weight: 700; margin-bottom: 4px;"></h2>
+                    <div id="modalPostcode" style="color: #64748b;"></div>
+                </div>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        // Sample Data
+        const properties = [
+            {
+                id: 1,
+                address: '2 Bed Flat, 123 Park Lane, Westminster',
+                postcode: 'SW1A 1AA',
+                askingPrice: 950000,
+                fairValue: 1100000,
+                undervaluationPct: 13.6,
+                pricePerSqft: 1118,
+                bedrooms: 2,
+                bathrooms: 1,
+                floorArea: 850,
+                propertyType: 'Flat',
+                epcRating: 'C',
+                description: 'Period conversion in prime location. Property would benefit from some modernisation. Original features retained.',
+                condition: 'Needs Modernisation',
+                conditionScore: 6.5,
+                agent: 'Knight Frank',
+                roi: 15.5,
+                irr: 18.2,
+                netProfit: 150000,
+                investmentScore: 87
+            },
+            {
+                id: 2,
+                address: '3 Bed Flat, 45 Sloane Square, Chelsea',
+                postcode: 'SW1W 8EE',
+                askingPrice: 1150000,
+                fairValue: 1250000,
+                undervaluationPct: 8.0,
+                pricePerSqft: 1045,
+                bedrooms: 3,
+                bathrooms: 2,
+                floorArea: 1100,
+                propertyType: 'Flat',
+                epcRating: 'D',
+                description: 'Spacious apartment requiring full refurbishment. Development potential subject to planning.',
+                condition: 'Renovation Required',
+                conditionScore: 5.0,
+                agent: 'Savills',
+                roi: 12.3,
+                irr: 14.8,
+                netProfit: 180000,
+                investmentScore: 79
+            },
+            {
+                id: 3,
+                address: '2 Bed Flat, 78 Eaton Square, Belgravia',
+                postcode: 'SW1W 9AG',
+                askingPrice: 1350000,
+                fairValue: 1420000,
+                undervaluationPct: 4.9,
+                pricePerSqft: 1588,
+                bedrooms: 2,
+                bathrooms: 2,
+                floorArea: 850,
+                propertyType: 'Flat',
+                epcRating: 'C',
+                description: 'Well-maintained property in prestigious garden square. Chain free.',
+                condition: 'Good Condition',
+                conditionScore: 8.5,
+                agent: 'Strutt & Parker',
+                roi: 8.2,
+                irr: 9.5,
+                netProfit: 95000,
+                investmentScore: 68
+            },
+            {
+                id: 4,
+                address: '1 Bed Flat, 12 Cadogan Gardens, Knightsbridge',
+                postcode: 'SW3 2RJ',
+                askingPrice: 725000,
+                fairValue: 810000,
+                undervaluationPct: 10.5,
+                pricePerSqft: 1207,
+                bedrooms: 1,
+                bathrooms: 1,
+                floorArea: 600,
+                propertyType: 'Flat',
+                epcRating: 'E',
+                description: 'Compact apartment with potential to extend lease. Requires updating throughout.',
+                condition: 'Needs Work',
+                conditionScore: 5.5,
+                agent: 'Foxtons',
+                roi: 14.8,
+                irr: 16.5,
+                netProfit: 95000,
+                investmentScore: 82
+            },
+            {
+                id: 5,
+                address: '2 Bed Flat, 34 Victoria Street, Westminster',
+                postcode: 'SW1H 0NF',
+                askingPrice: 875000,
+                fairValue: 920000,
+                undervaluationPct: 4.9,
+                pricePerSqft: 1094,
+                bedrooms: 2,
+                bathrooms: 1,
+                floorArea: 800,
+                propertyType: 'Flat',
+                epcRating: 'C',
+                description: 'Modern apartment with good natural light. Recently decorated.',
+                condition: 'Excellent',
+                conditionScore: 9.0,
+                agent: 'Hamptons',
+                roi: 7.5,
+                irr: 8.8,
+                netProfit: 68000,
+                investmentScore: 64
+            },
+            {
+                id: 6,
+                address: '3 Bed House, 56 Kensington Park Road, Notting Hill',
+                postcode: 'W11 2PN',
+                askingPrice: 1650000,
+                fairValue: 1800000,
+                undervaluationPct: 8.3,
+                pricePerSqft: 1100,
+                bedrooms: 3,
+                bathrooms: 2,
+                floorArea: 1500,
+                propertyType: 'House',
+                epcRating: 'C',
+                description: 'Victorian terrace house with original features. Garden and off-street parking.',
+                condition: 'Good Condition',
+                conditionScore: 7.5,
+                agent: 'Knight Frank',
+                roi: 11.2,
+                irr: 13.5,
+                netProfit: 185000,
+                investmentScore: 75
+            },
+            {
+                id: 7,
+                address: '1 Bed Flat, 89 Mayfair, Central London',
+                postcode: 'W1K 3LB',
+                askingPrice: 850000,
+                fairValue: 975000,
+                undervaluationPct: 12.8,
+                pricePerSqft: 1417,
+                bedrooms: 1,
+                bathrooms: 1,
+                floorArea: 600,
+                propertyType: 'Flat',
+                epcRating: 'D',
+                description: 'Luxury apartment in the heart of Mayfair. Concierge service and gym.',
+                condition: 'Excellent',
+                conditionScore: 9.5,
+                agent: 'Savills',
+                roi: 16.8,
+                irr: 19.2,
+                netProfit: 125000,
+                investmentScore: 88
+            },
+            {
+                id: 8,
+                address: '4 Bed House, 23 Chelsea Embankment, Chelsea',
+                postcode: 'SW3 4LE',
+                askingPrice: 2850000,
+                fairValue: 3100000,
+                undervaluationPct: 8.1,
+                pricePerSqft: 1425,
+                bedrooms: 4,
+                bathrooms: 3,
+                floorArea: 2000,
+                propertyType: 'House',
+                epcRating: 'B',
+                description: 'Stunning riverside property with private terrace. Recently refurbished to high standard.',
+                condition: 'Excellent',
+                conditionScore: 9.0,
+                agent: 'Knight Frank',
+                roi: 9.5,
+                irr: 11.2,
+                netProfit: 270000,
+                investmentScore: 72
+            }
+        ];
+
+        let shortlist = [];
+        let currentSort = 'undervaluation';
+        let filters = {
+            location: '',
+            minPrice: 500000,
+            maxPrice: 2000000,
+            bedrooms: 'any',
+            propertyType: 'any',
+            minUndervaluation: 0,
+            condition: 'any'
+        };
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('en-GB', {
+                style: 'currency',
+                currency: 'GBP',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(value);
+        }
+
+        function getConditionBadge(condition) {
+            if (condition === 'Excellent' || condition === 'Good Condition') return 'badge-green';
+            if (condition === 'Needs Modernisation') return 'badge-yellow';
+            return 'badge-yellow';
+        }
+
+        function sortProperties() {
+            currentSort = document.getElementById('sortSelect').value;
+            const labels = {
+                undervaluation: 'Highest Undervaluation',
+                roi: 'Highest ROI',
+                investment: 'Investment Score',
+                price: 'Lowest Price'
+            };
+            document.getElementById('sortLabel').textContent = labels[currentSort];
+            renderProperties();
+        }
+
+        function getSortedProperties() {
+            return [...properties].sort((a, b) => {
+                if (currentSort === 'undervaluation') return b.undervaluationPct - a.undervaluationPct;
+                if (currentSort === 'roi') return b.roi - a.roi;
+                if (currentSort === 'investment') return b.investmentScore - a.investmentScore;
+                if (currentSort === 'price') return a.askingPrice - b.askingPrice;
+                return 0;
+            });
+        }
+
+        function updatePriceDisplay() {
+            const min = parseInt(document.getElementById('minPrice').value) || 0;
+            const max = parseInt(document.getElementById('maxPrice').value) || 5000000;
+            const minText = min >= 1000000 ? `£${(min/1000000).toFixed(1)}M` : `£${(min/1000).toFixed(0)}k`;
+            const maxText = max >= 1000000 ? `£${(max/1000000).toFixed(1)}M` : `£${(max/1000).toFixed(0)}k`;
+            document.getElementById('priceRangeDisplay').textContent = `${minText} - ${maxText}`;
+        }
+
+        function updateUndervalDisplay() {
+            const value = document.getElementById('undervalSlider').value;
+            document.getElementById('undervalDisplay').textContent = `${value}%`;
+        }
+
+        function selectBedrooms(value) {
+            // Remove active class from all
+            document.querySelectorAll('[data-bedrooms]').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            // Add active class to selected
+            document.querySelector(`[data-bedrooms="${value}"]`).classList.add('active');
+            filters.bedrooms = value;
+            applyFilters();
+        }
+
+        function applyFilters() {
+            filters.location = document.getElementById('locationFilter').value.toLowerCase();
+            filters.minPrice = parseInt(document.getElementById('minPrice').value) || 0;
+            filters.maxPrice = parseInt(document.getElementById('maxPrice').value) || 10000000;
+            filters.propertyType = document.getElementById('propertyType').value;
+            filters.minUndervaluation = parseInt(document.getElementById('undervalSlider').value) || 0;
+            filters.condition = document.getElementById('conditionFilter').value;
+            
+            renderProperties();
+        }
+
+        function resetFilters() {
+            document.getElementById('locationFilter').value = '';
+            document.getElementById('minPrice').value = 500000;
+            document.getElementById('maxPrice').value = 2000000;
+            document.getElementById('propertyType').value = 'any';
+            document.getElementById('undervalSlider').value = 0;
+            document.getElementById('conditionFilter').value = 'any';
+            
+            // Reset bedrooms
+            document.querySelectorAll('[data-bedrooms]').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector('[data-bedrooms="any"]').classList.add('active');
+            
+            filters = {
+                location: '',
+                minPrice: 500000,
+                maxPrice: 2000000,
+                bedrooms: 'any',
+                propertyType: 'any',
+                minUndervaluation: 0,
+                condition: 'any'
+            };
+            
+            updatePriceDisplay();
+            updateUndervalDisplay();
+            renderProperties();
+        }
+
+        function getFilteredProperties() {
+            return properties.filter(prop => {
+                // Location filter
+                if (filters.location && 
+                    !prop.address.toLowerCase().includes(filters.location) && 
+                    !prop.postcode.toLowerCase().includes(filters.location)) {
+                    return false;
+                }
+                
+                // Price filter
+                if (prop.askingPrice < filters.minPrice || prop.askingPrice > filters.maxPrice) {
+                    return false;
+                }
+                
+                // Bedrooms filter
+                if (filters.bedrooms !== 'any' && prop.bedrooms < parseInt(filters.bedrooms)) {
+                    return false;
+                }
+                
+                // Property type filter
+                if (filters.propertyType !== 'any' && prop.propertyType !== filters.propertyType) {
+                    return false;
+                }
+                
+                // Undervaluation filter
+                if (prop.undervaluationPct < filters.minUndervaluation) {
+                    return false;
+                }
+                
+                // Condition filter
+                if (filters.condition !== 'any' && prop.condition !== filters.condition) {
+                    return false;
+                }
+                
+                return true;
+            });
+        }
+
+        function getSortedProperties() {
+            const filtered = getFilteredProperties();
+            return filtered.sort((a, b) => {
+                if (currentSort === 'undervaluation') return b.undervaluationPct - a.undervaluationPct;
+                if (currentSort === 'roi') return b.roi - a.roi;
+                if (currentSort === 'investment') return b.investmentScore - a.investmentScore;
+                if (currentSort === 'price') return a.askingPrice - b.askingPrice;
+                return 0;
+            });
+        }
+
+        function toggleShortlist(id) {
+            const index = shortlist.indexOf(id);
+            if (index > -1) {
+                shortlist.splice(index, 1);
+            } else {
+                shortlist.push(id);
+            }
+            document.getElementById('shortlistCount').textContent = shortlist.length;
+            renderProperties();
+        }
+
+        function openModal(property) {
+            document.getElementById('modalTitle').textContent = property.address;
+            document.getElementById('modalPostcode').textContent = property.postcode;
+            
+            const modalBody = `
+                <div class="valuation-box">
+                    <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">Valuation Summary</h3>
+                    <div class="valuation-grid">
+                        <div class="valuation-item">
+                            <div class="valuation-label">Asking Price</div>
+                            <div class="valuation-amount">${formatCurrency(property.askingPrice)}</div>
+                            <div style="font-size: 12px; color: #64748b; margin-top: 4px;">${formatCurrency(property.pricePerSqft)}/sqft</div>
+                        </div>
+                        <div class="valuation-item">
+                            <div class="valuation-label">Fair Value (AI)</div>
+                            <div class="valuation-amount" style="color: #2563eb;">${formatCurrency(property.fairValue)}</div>
+                            <div style="font-size: 12px; color: #10b981; margin-top: 4px;">+${formatCurrency(property.fairValue - property.askingPrice)}</div>
+                        </div>
+                        <div class="valuation-item">
+                            <div class="valuation-label">Undervaluation</div>
+                            <div class="valuation-amount" style="color: #10b981;">${property.undervaluationPct.toFixed(1)}%</div>
+                            <div style="font-size: 12px; color: #64748b; margin-top: 4px;">ROI: ${property.roi}%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Property Details</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                        <div class="metric-row">
+                            <span class="metric-label">Type</span>
+                            <span class="metric-value">${property.propertyType}</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Floor Area</span>
+                            <span class="metric-value">${property.floorArea} sqft</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">EPC Rating</span>
+                            <span class="metric-value">${property.epcRating}</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Condition</span>
+                            <span class="metric-value">${property.conditionScore}/10</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Description</h3>
+                    <p style="color: #475569; line-height: 1.6;">${property.description}</p>
+                </div>
+
+                <div class="investment-summary">
+                    <h3 class="section-title">Investment Summary</h3>
+                    <div class="metric-row">
+                        <span class="metric-label">Projected ROI</span>
+                        <span class="metric-value" style="color: #10b981;">${property.roi}%</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">IRR</span>
+                        <span class="metric-value" style="color: #2563eb;">${property.irr}%</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Net Profit (Est.)</span>
+                        <span class="metric-value">${formatCurrency(property.netProfit)}</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Investment Score</span>
+                        <span class="metric-value">${property.investmentScore}/100</span>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    <button class="btn btn-primary" style="flex: 1;" onclick="toggleShortlist(${property.id}); renderProperties();">
+                        ${shortlist.includes(property.id) ? '⭐ In Shortlist' : '☆ Add to Shortlist'}
+                    </button>
+                    <button class="btn btn-primary" style="flex: 1;" onclick="closeModal()">Close</button>
+                </div>
+            `;
+            
+            document.getElementById('modalBody').innerHTML = modalBody;
+            document.getElementById('propertyModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('propertyModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function renderProperties() {
+            const grid = document.getElementById('propertyGrid');
+            const sorted = getSortedProperties();
+            
+            // Update count
+            document.getElementById('propertyCount').textContent = sorted.length;
+            
+            if (sorted.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">🔍</div>
+                        <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 8px; color: #0f172a;">No properties found</h3>
+                        <p style="color: #64748b; margin-bottom: 20px;">Try adjusting your filters to see more results</p>
+                        <button class="btn btn-primary" onclick="resetFilters()">Reset Filters</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = sorted.map(prop => `
+                <div class="property-card" onclick="openModal(${JSON.stringify(prop).replace(/"/g, '&quot;')})">
+                    <div class="property-image">🏠</div>
+                    <div class="property-content">
+                        <h3 class="property-title">${prop.address}</h3>
+                        <div class="property-meta">
+                            <span>📍 ${prop.postcode}</span>
+                            <span>🛏️ ${prop.bedrooms} bed</span>
+                            <span>🛁 ${prop.bathrooms} bath</span>
+                        </div>
+                        
+                        <div class="metric-row">
+                            <span class="metric-label">Asking Price</span>
+                            <span class="metric-value">${formatCurrency(prop.askingPrice)}</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Fair Value</span>
+                            <span class="metric-value primary">${formatCurrency(prop.fairValue)}</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Undervaluation</span>
+                            <span class="metric-value highlight">${prop.undervaluationPct.toFixed(1)}%</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Investment Score</span>
+                            <span class="metric-value">${prop.investmentScore}/100 ${prop.investmentScore >= 80 ? '🏆' : '⭐'}</span>
+                        </div>
+
+                        <div class="badges">
+                            <span class="badge ${getConditionBadge(prop.condition)}">${prop.condition}</span>
+                            <span class="badge badge-purple">EPC: ${prop.epcRating}</span>
+                            <span class="badge badge-blue">ROI: ${prop.roi}%</span>
+                        </div>
+
+                        <div class="property-actions">
+                            <div class="btn-view">View Details</div>
+                            <div class="btn-star ${shortlist.includes(prop.id) ? 'active' : ''}" onclick="event.stopPropagation(); toggleShortlist(${prop.id})">
+                                ${shortlist.includes(prop.id) ? '⭐' : '☆'}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('propertyModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Initialize
+        updatePriceDisplay();
+        updateUndervalDisplay();
+        renderProperties();
+    </script>
+</body>
+</html>
